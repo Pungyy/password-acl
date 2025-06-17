@@ -80,3 +80,27 @@ DELETE /api/data/:id   : Suppression de données (pareil qu'au dessus)
 
 
 // Voici ce qui a été fait.
+
+- Inscription (register)
+- Connexion (login)
+- Déconnexion (logout)
+- Gestion des tokens (refresh)
+
+- Validation des données entrantes avec Zod
+- Système de double token (access + refresh)
+
+- Implémentation de rôles (admin, user, guest)
+- Gestion fine des permissions avec AccessControl
+- Middleware de vérification des permissions
+- Gestion des ressources personnelles (own) et globales
+
+ - Avoir au moins 8 caractères
+   - Contenir au moins une lettre et un chiffre
+
+    - Utiliser un access token de courte durée
+   - Utiliser un refresh token de longue durée
+   - Permettre le renouvellement des tokens
+
+      - Être héritées hiérarchiquement
+   - Distinguer les ressources personnelles
+   - Être vérifiées à chaque requête
