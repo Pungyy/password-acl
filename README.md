@@ -77,3 +77,6 @@ DELETE /api/data/:id   : Suppression de données (pareil qu'au dessus)
 - Ajout d'éléments de sécurité pour eviter les params bombs, les requêtes malveillantes etc
 - Tests fonctionnels comme ceux présents en exemple
 
+
+
+// Voici ce qui a été fait.
