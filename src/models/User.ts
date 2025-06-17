@@ -9,21 +9,22 @@ export const UserSchema = z.object({
   email: z.string().email()
 });
 
+// Type interne complet avec id
+export type User = z.infer<typeof UserSchema> & { id: string };
+
 export const LoginSchema = z.object({
   username: z.string(),
   password: z.string()
 });
 
-export type User = z.infer<typeof UserSchema>;
+export function getUser(username: string) {
+  return users.get(username);
+}
 
-export function getUser(id: string) {
-  return users.get(id);
+export function userExist(username: string) {
+  return users.has(username);
 }
 
 export function setUser(user: User) {
   users.set(user.username, user);
-}
-
-export function userExist(id: string) {
-  return users.has(id);
 }

@@ -11,33 +11,29 @@ const route = new Hono();
 
 route.post('/register', zValidator('json', UserSchema), async (c) => {
   try {
-    const validatedUser = c.req.valid("json");
+    const validatedUser = c.req.valid('json');
 
-    // Vérifier si l'utilisateur existe déjà
     if (userExist(validatedUser.username)) {
-      return c.json({
-        error: "Nom d'utilisateur déjà pris"
-      }, 400)
+      return c.json({ error: "Nom d'utilisateur déjà pris" }, 400);
     }
 
-    const { password: hashedPassword, salt } = await hashPassword(validatedUser.password);
-    const userId = crypto.randomUUID(); // Générer un ID unique
+    const hashedPassword = await hashPassword(validatedUser.password);
 
-    const user = {
-      id: userId,
+    const user: User = {
+      id: crypto.randomUUID(),
       ...validatedUser,
       password: hashedPassword,
-      salt
     };
 
     setUser(user);
 
     // Générer les tokens
     const tokens = generateTokens({
-      userId,
+      userId: user.id,
       username: user.username,
       role: user.role
     });
+
 
     // Stocker le refresh token
     createRefreshToken(tokens.refreshToken);
