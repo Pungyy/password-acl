@@ -1,5 +1,6 @@
 import { verifyAccessToken } from '../services/JWT.js';
 import { createMiddleware } from 'hono/factory';
+import { ac } from '../services/accessControl.js';
 
 import { users } from '../fake/data.js';
 
@@ -32,3 +33,20 @@ export const authMiddleware = createMiddleware(async (c, next) => {
     return c.json({ error: 'Token invalide ou expiré' }, 401);
   }
 });  
+
+export const checkPermission = (action: 'read' | 'create' | 'update' | 'delete', resource: string) =>
+  createMiddleware(async (c, next) => {
+    const user = c.get('user');
+
+    // Si aucune ressource ID dans l'URL, on suppose une action "Any"
+    const targetId = c.req.param('id');
+    const possession = targetId && targetId === user.id ? 'Own' : 'Any';
+
+    const permission = ac.can(user.role)[`${action}${possession}`](resource);
+
+    if (!permission.granted) {
+      return c.json({ error: 'Accès refusé : permission manquante' }, 403);
+    }
+
+    await next();
+  });
